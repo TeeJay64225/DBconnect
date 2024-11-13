@@ -1,6 +1,6 @@
 import express from "express";
-
-import UserModel from "../models/user.js"; // Assuming the User model is defined
+import bcrypt from "bcrypt"; // Ensure bcrypt is installed and imported
+import UserModel from "../models/user.js";
 import {
 	getUsers,
 	getUser,
@@ -19,9 +19,9 @@ router.put("/:id", updateUser);
 router.delete("/:id", deleteUser);
 
 // Sign Up Route
-router.post("/api/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
 	try {
-		const { phone_number, password, role } = req.body;
+		const { name, email, phone_number, password, role } = req.body;
 
 		// Check if the user already exists
 		const existingUser = await UserModel.findOne({ phone_number });
@@ -34,6 +34,8 @@ router.post("/api/signup", async (req, res) => {
 
 		// Create a new user
 		const newUser = new UserModel({
+			name,
+			email,
 			phone_number,
 			password: hashedPassword,
 			role,
